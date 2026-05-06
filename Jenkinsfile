@@ -16,7 +16,7 @@ stages {
  deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: '02db91c7-3038-4b72-ade8-7fd682fba596', path: '', url: 'http://172.31.1.136:8080')], contextPath: 'dectestapp', war: '**/*.war'
         }
                       }   
-      stage('test') {
+      stage('test1') {
   steps {
      git 'https://github.com/IntelliqDevops/FunctionalTesting.git'
   }
