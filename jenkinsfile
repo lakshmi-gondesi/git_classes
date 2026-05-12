@@ -1,31 +1,37 @@
+
 pipeline{
-agent any
-stages {
-   stage('download') {
-  steps {
-   git 'https://github.com/IntelliqDevops/maven.git'
+    agent any
+    stages{
+        stage('download')
+        {
+            steps{
+                git 'https://github.com/IntelliqDevops/maven.git'
+            }
         }
-   }
-     stage('build') {
-  steps {
-     sh 'mvn package' 
-  }
-      } 
-           stage('deploy') {
-  steps {
- deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: '02db91c7-3038-4b72-ade8-7fd682fba596', path: '', url: 'http://172.31.17.104:8080')], contextPath: 'dectestapp', war: '**/*.war'
+        stage('build')
+        {
+            steps{
+           sh 'mvn package'
+            }
         }
-                      }   
-      stage('test1') {
-  steps {
-     git 'https://github.com/IntelliqDevops/FunctionalTesting.git'
-  }
-      }    
-      stage('deliver'){
-          steps{
-       sh 'java -jar /var/lib/jenkins/workspace/scriptedpipeline/testing.jar'
-   }
-      }
-      
-       }
+        stage('deploy')
+        {
+            steps{
+           deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: '45bd33ca-e94a-401e-8690-ea3b444df359', path: '', url: 'http://172.31.17.104:8080')], contextPath: 'testapp', war: '**/*.war'
+            }
+        }
+        stage('test')
+        {
+            steps{
+                git 'https://github.com/IntelliqDevops/FunctionalTesting.git'
+                sh 'java -jar /var/lib/jenkins/workspace/declarativepipeline2/testing.jar'
+            }
+        }
+        stage('deliver')
+        {
+            steps{
+           deploy adapters: [tomcat9(alternativeDeploymentContext: '', credentialsId: '45bd33ca-e94a-401e-8690-ea3b444df359', path: '', url: 'http://172.31.17.206:8080')], contextPath: 'prodapp', war: '**/*.war'
+            }
+        }
+    }
 }
